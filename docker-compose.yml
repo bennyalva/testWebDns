@@ -1,0 +1,28 @@
+services:
+  app-web:
+    build:
+      context: .
+      dockerfile: AppWeb.Dockerfile
+    container_name: app-web
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - dns-server
+    restart: unless-stopped
+
+  dns-server:
+    build:
+      context: .
+      dockerfile: DnsServer.Dockerfile
+    container_name: dns-server
+    ports:
+      - "53:53/udp"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
